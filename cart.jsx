@@ -25,9 +25,6 @@ import { useState , useEffect } from 'react';
 //     },
 
 // ];
-
-// Forexample ma yaha chnage kr raha hon  jesy hi kisi file ma chnage ho ga to ider left side pr likha jaye ga ky kitni files ma chnange kiaok
-
 const cartArray = [
     {
         key: 0,
