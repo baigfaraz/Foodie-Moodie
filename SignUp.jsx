@@ -1,14 +1,14 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, TouchableOpacity, Image, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import useRegisterApi from './CustomHooks/postApiCustomHook';
 
 export default function SignUp({ navigation }) {
 
   const [showPassword, setShowPassword] = useState(false);
-  const toggleShowPassword = () => {setShowPassword(!showPassword);}
+  const toggleShowPassword = () => { setShowPassword(!showPassword); }
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const toggleShowConfirmPassword = () => {setShowConfirmPassword(!showConfirmPassword);}
+  const toggleShowConfirmPassword = () => { setShowConfirmPassword(!showConfirmPassword); }
 
 
   const [email, setEmail] = useState('');
@@ -16,41 +16,6 @@ export default function SignUp({ navigation }) {
   const [fullname, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
-
-  const register = () => {
-    if (password == '' || username == '' || fullname == '' || email == '' || confirmpassword == '') {
-      return alert('Fields missing.');
-    }
-    else if (password != confirmpassword) {
-      return alert('Password and Confirm Password is not same.');
-    }
-    else {
-
-      axios.post('http://talk2you-live.lingmo-api.com/api/user', {
-        password: password,
-        languageId: "en-US",
-        couponCode: "",
-        username: username,
-        deviceToken: "",
-        fullName: fullname,
-        email: email,
-        notificationApp: "lingmoimtab",
-        phone: "0321111111",
-      })
-        .then(function (response) {
-          if (response.data.message == "User already exists") {
-            alert('User already exists');
-          }
-          else {
-            alert('Reistered Successfully');
-            navigation.navigate('Login');
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    };
-  }
 
   return (
     <View>
@@ -123,7 +88,7 @@ export default function SignUp({ navigation }) {
       </View>
 
       <TouchableOpacity style={styles.button}
-        onPress={() => register()}
+        onPress={() => useRegisterApi({navigation} , password, username, fullname, email, confirmpassword)}
       >
         <Text>Create account</Text>
       </TouchableOpacity>
