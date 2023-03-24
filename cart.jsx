@@ -1,30 +1,5 @@
-import {  TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
-import { useState , useEffect } from 'react';
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
 
-// const DATA3 = [
-//     {
-//         key: 0,
-//         title: 'Chicken',
-//         source: require('./assets/chicken.jpg'),
-//         source2: require('./assets/delete.png'),
-//         price: '25$',
-//     },
-//     {
-//         key: 1,
-//         title: 'Chicken',
-//         source: require('./assets/chicken.jpg'),
-//         source2: require('./assets/delete.png'),
-//         price: '25$',
-//     },
-//     {
-//         key: 2,
-//         title: 'Chicken',
-//         source: require('./assets/chicken.jpg'),
-//         source2: require('./assets/delete.png'),
-//         price: '25$',
-//     },
-
-// ];
 const cartArray = [
     {
         key: 0,
@@ -49,38 +24,20 @@ const cartArray = [
     },
 ]
 
-
-
-
-export default function CartScreen() {
-
-    // const [mycart, setmycart] = useState([])
-    // const getcart = async () => {
-    //     try {
-    //         const response = await fetch('');
-    //         const json = await response.json();
-    //         setmycart(json.cartData);
-    //     } catch (error) {
-    //         console.error(error);
-    //     } finally {
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     getcart();
-    // }, []);     
-
+export default function CartScreen({ navigation }) {
 
     return (
 
         <View style={StyleSheet.container}>
             <View style={styles.upperView}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => { navigation.navigate('Home') }}
+                >
                     <Image source={require('./assets/back.png')} />
                 </TouchableOpacity>
                 <Text style={{ fontSize: 18, fontWeight: '500' }}>Cart</Text>
                 <TouchableOpacity>
-                    <Image source={require('./assets/delete.png')} />
+                    <Image source={require('./assets/menu.png')} />
                 </TouchableOpacity>
             </View>
 

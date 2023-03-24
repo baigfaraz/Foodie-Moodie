@@ -22,10 +22,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name='FrontPage' component={FrontPage} options={{ headerShown: false }} />
-        <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+        {/* <Stack.Screen name='FrontPage' component={FrontPage} options={{ headerShown: false }} /> */}
+        {/* <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} /> */}
         <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
-        <Stack.Screen name='SignUp' component={SignUp} options={{ headerShown: false }} />
+        {/* <Stack.Screen name='SignUp' component={SignUp} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='EmailVerify' component={EmailVerify} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='AuthCode' component={AuthCode} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='CreatePassword' component={CreatePassword} options={{ headerShown: false }} /> */}

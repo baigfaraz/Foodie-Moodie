@@ -1,5 +1,6 @@
 import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Image } from 'react-native';
 import React, { useState } from 'react';
+import useSighnInApi from './CustomHooks/postSighnInApi';
 
 
 export default function Login({ navigation }) {
@@ -51,17 +52,18 @@ export default function Login({ navigation }) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button}
-                    onPress={()=> navigation.navigate('Home')}
+                    // onPress={() => useSighnInApi({ navigation }, password, username)}
+                    onPress={()=>{navigation.navigate('Home')}}
                 >
                     <Text style={{ color: 'white' }}>Login</Text>
                 </TouchableOpacity>
 
-                <Text style={styles.loginWith}>Or login with</Text>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('SignUp')}
-                >
-                    <Text style={styles.signUp}>New on foodie moodie? Sign up</Text>
-                </TouchableOpacity>
+                <View style={styles.bottomView}>
+                    <Text style={styles.loginWith}>Or login with</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                        <Text style={styles.signUp}>New on foodie moodie? Sign up</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -122,15 +124,11 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         color: '#808080',
-        textAlign: 'center',
-        margin: 25,
     },
     signUp: {
         fontSize: 15,
         fontWeight: 'bold',
         color: '#808080',
-        textAlign: 'center',
-        marginTop: 240,
     },
     paswordbox: {
         display: 'flex',
@@ -161,4 +159,14 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         backgroundColor: 'white',
     },
+    bottomView:{
+        alignItems:'center',
+        marginLeft:17,
+        marginBottom:17,
+        marginRight:17,
+        height:370,
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'space-between',
+    }
 });

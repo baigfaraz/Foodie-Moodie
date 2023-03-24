@@ -1,5 +1,5 @@
-import { useState, TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
-
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
+import { useState } from 'react';
 const DATA2 = [
     {
         key: 0,
@@ -21,11 +21,17 @@ const DATA2 = [
     },
 ];
 
-export default function Search() {
+
+
+export default function Search({ navigation }) {
+
+    const [searchText, setSearchText] = useState('');
     return (
         <View style={StyleSheet.container}>
             <View style={styles.upperView}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => { navigation.navigate('Home') }}
+                >
                     <Image source={require('./assets/back.png')} />
                 </TouchableOpacity>
                 <Text style={{ fontSize: 18, fontWeight: '500', marginLeft: 105 }}>Search</Text>
@@ -35,7 +41,10 @@ export default function Search() {
                 <TextInput
                     style={styles.input}
                     placeholder='Search Your Favourite Food'
-                    keyboardType='default' />
+                    keyboardType='default'
+                    onChangeText={setSearchText}
+                    value={searchText}
+                />
                 <TouchableOpacity style={styles.button2}>
                     <Image source={require('./assets/search.png')} style={styles.searcIcon} />
                 </TouchableOpacity>
@@ -43,14 +52,15 @@ export default function Search() {
             <View style={{ marginLeft: 17, marginRight: 17 }}>
                 <Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 20 }}>Recent</Text>
             </View>
-
-            <View style={styles.popular}>
-                <Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 20, marginBottom: 5  , marginLeft:11}}>Popular</Text>
+    
+            <View>
+                <Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 20, marginBottom: 5, marginLeft: 17 }}>Popular</Text>
                 <View>
                     <FlatList
                         data={DATA2}
                         keyExtractor={item => item.key}
                         horizontal={true}
+
                         renderItem={({ item }) =>
 
                             <View style={styles.items}>
@@ -118,10 +128,6 @@ const styles = StyleSheet.create({
         height: 30,
         margin: 7.2,
     },
-    popular: {
-        marginLeft: 11,
-        marginRight: 17,
-    },
     items: {
         marginTop: 10,
         marginLeft: 6,
@@ -142,6 +148,7 @@ const styles = StyleSheet.create({
     popularfoodImage: {
         width: 130,
         height: 90,
-    },
+    }
+    
 });
 

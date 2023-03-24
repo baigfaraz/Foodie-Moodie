@@ -36,3 +36,4 @@ const useRegisterApi = ({navigation} , password, username, fullname, email, conf
 }
 
 export default useRegisterApi;
+

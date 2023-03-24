@@ -1,72 +1,85 @@
-import { useEffect } from 'react';
-import { useState, TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
-
-const DATA = [
-  {
-    key: 0,
-    title: 'Burger',
-    source: require('./assets/burger.jpg'),
-  },
-  {
-    key: 2,
-    title: 'Kabab',
-    source: require('./assets/kabab.jpg'),
-  },
-  {
-    key: 3,
-    title: 'Chicken',
-    source: require('./assets/chicken.jpg'),
-  },
-];
-const DATA2 = [
-  {
-    key: 0,
-    title: 'Burger',
-    source: require('./assets/burger.jpg'),
-    price: '15$',
-  },
-  {
-    key: 2,
-    title: 'Kabab',
-    source: require('./assets/kabab.jpg'),
-    price: '10$',
-  },
-  {
-    key: 3,
-    title: 'Chicken',
-    source: require('./assets/chicken.jpg'),
-    price: '25$',
-  },
-];
-const DATA3 = [
-  {
-    key: 0,
-    title: 'Chicken',
-    source: require('./assets/chicken.jpg'),
-    price: '25$',
-  },
-
-];
+import { useEffect, useState } from 'react';
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
+import app from './firebase';
+import { getDatabase, ref, onValue , update } from 'firebase/database';
 
 export default function Home({ navigation }) {
 
+  // const [category, setCategory] = useState();
+  // const [popularFoods, setPopularFoods] = useState();
+  // const [bestSeller, setBestSeller] = useState();
+  // useEffect(() => {
+  //   const db = getDatabase(app);
+  //   const dbRef1 = ref(db, 'foodCategory');
+  //   const dbRef2 = ref(db, 'popularFoods');
+  //   const dbRef3 = ref(db, 'bestSeller');
+  //   onValue(dbRef1, (snapshot) => {
+  //     let data = snapshot.val();
+  //     setCategory(data);
+  //   })
+  //   onValue(dbRef2, (snapshot) => {
+  //     let data = snapshot.val();
+  //     setPopularFoods(data);
+  //   })
+  //   onValue(dbRef3, (snapshot) => {
+  //     let data = snapshot.val();
+  //     setBestSeller(data);
+  //   })
+  // }, [])
 
-// const [myburgers , setBurgers] = useState([])
+  const [category, setCategory] = useState();
+  const [popularFoods, setPopularFoods] = useState();
+  const [bestSeller, setBestSeller] = useState();
+  const [like , setLike] = useState(false);
 
-//   const getPopularBurgers = async () => {
-//     try {
-//       const response = await fetch('https://d0c47e82-0664-463e-89b1-cc3db4564af3.mock.pstmn.io');
-//       const json = await response.json();
-//       setData(json.movies);
-//     } catch (error) {
-//       console.error(error);
-//     } finally {
-//     }
-//   };
+  useEffect(() => {
+    const db = getDatabase(app);
+    const dbRef1 = ref(db, 'foodCategory');
+    const dbRef2 = ref(db, 'popularFoods');
+    const dbRef3 = ref(db, 'bestSeller');
+    onValue(dbRef1, (snapshot) => {
+      let data = snapshot.val();
+      setCategory(data);
+    })
+    onValue(dbRef2, (snapshot) => {
+      let data = snapshot.val();
+      setPopularFoods(data);
+    })
+    onValue(dbRef3, (snapshot) => {
+      let data = snapshot.val();
+      console.log(data);
+      setBestSeller(data);
+    })
+    // var index = 2
+    // var dbRefRef = 'alldeals/1/secondtarray/'+index
+    // const dbRefforUpdate = ref(db, dbRefRef)
+    // var index = 1
+    // var dbRefRef = 'popularFoods/'+index
+    // const dbRefforUpdate = ref(dbRefRef)
+    // update(dbRefforUpdate,{
+      
+    //   "like": setLike(!like)
+    
+    // })
+    // handleLike();
+  }, [])
 
-//   useEffect(()=>{
-//     getPopularBurgers();
-//   } , [])
+  const handleLike = () =>{
+    var index = 0
+    var dbRefRef = 'popularFoods/'+index
+    const dbRefforUpdate = ref(dbRefRef)
+    update(dbRefforUpdate,{
+      
+      "like": setLike(!like)
+    
+    })
+    const dbRef2 = ref(db, 'popularFoods');
+    onValue(dbRef2, (snapshot) => {
+      let data = snapshot.val();
+      setPopularFoods(data);
+    })
+
+  }
 
 
   return (
@@ -77,14 +90,13 @@ export default function Home({ navigation }) {
       <Text style={styles.text2}>Choose your favorite food</Text>
 
       <View style={styles.foodCategory}>
-        <TextInput
-          style={styles.input}
-          placeholder='Search Your Favourite Food'
-          keyboardType='default' />
-
-        <TouchableOpacity style={styles.button2}>
+        <TouchableOpacity style={styles.searchBar}
+          onPress={() => { navigation.navigate('Search') }}
+        >
+          <Text style={{ fontSize: 15, fontWeight: '300' }}>Search Your Favourite Food</Text>
           <Image source={require('./assets/search.png')} style={styles.searcIcon} />
         </TouchableOpacity>
+
       </View>
 
       <ScrollView>
@@ -99,7 +111,7 @@ export default function Home({ navigation }) {
 
         <View>
           <FlatList
-            data={DATA}
+            data={category}
             keyExtractor={item => item.key}
             horizontal={true}
             renderItem={({ item }) =>
@@ -107,12 +119,11 @@ export default function Home({ navigation }) {
               <View style={styles.items}>
                 <TouchableOpacity>
                   <View style={styles.contain1}>
-                    <Image source={item.source} style={styles.foodCategoryImage} />
+                    <Image source={{ uri: item.img }} style={styles.foodCategoryImage} />
                     <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
-
             }
           />
         </View>
@@ -126,7 +137,7 @@ export default function Home({ navigation }) {
 
         <View>
           <FlatList
-            data={DATA2}
+            data={popularFoods}
             keyExtractor={item => item.key}
             horizontal={true}
             renderItem={({ item }) =>
@@ -134,13 +145,17 @@ export default function Home({ navigation }) {
               <View style={styles.items}>
                 <TouchableOpacity>
                   <View style={styles.contain2}>
-                    <Image source={item.source} style={styles.popularfoodImage} />
+                    <TouchableOpacity
+                     onPress={() => {handleLike()}} 
+                    >
+                      <Image source={{ uri: item.img2 }} style={{ height: 20, width: 20 }} />
+                    </TouchableOpacity>
+                    <Image source={{ uri: item.img }} style={styles.popularfoodImage} />
                     <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
                     <Text style={{ fontSize: 16, fontWeight: '500', margin: 5, marginLeft: 11 }}>{item.price}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
-
             }
           />
         </View>
@@ -151,7 +166,7 @@ export default function Home({ navigation }) {
 
         <View>
           <FlatList
-            data={DATA3}
+            data={bestSeller}
             keyExtractor={item => item.key}
             horizontal={true}
             renderItem={({ item }) =>
@@ -160,7 +175,8 @@ export default function Home({ navigation }) {
                 <TouchableOpacity>
                   <View style={{ display: 'flex', flexDirection: 'row', }}>
                     <View style={styles.contain3}>
-                      <Image source={item.source} style={styles.bestsellerImage} />
+                      <Image source={{ uri: item.img }} style={styles.bestsellerImage} />
+                      {/* <Image source={{uri: item.heart}}/> */}
                       <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 16, }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
                         <Text style={{ fontSize: 16, fontWeight: '500', margin: 5, marginLeft: 11 }}>{item.price}</Text>
@@ -169,27 +185,34 @@ export default function Home({ navigation }) {
                   </View>
                 </TouchableOpacity>
               </View>
-
             }
           />
         </View>
-      </ScrollView>
+      </ScrollView >
 
       <View style={styles.navigationbar}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => { navigation.navigate('Home') }}
+        >
           <Image source={require('./assets/home.png')} style={{ height: 28, width: 28 }} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => { navigation.navigate('favourite') }}
+        >
           <Image source={require('./assets/fav.png')} style={{ height: 28, width: 28 }} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => { navigation.navigate('CartScreen') }}
+        >
           <Image source={require('./assets/cart.png')} style={{ height: 30, width: 30 }} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => { navigation.navigate('Profile') }}
+        >
           <Image source={require('./assets/profile.png')} style={{ height: 28, width: 28 }} />
         </TouchableOpacity>
       </View>
-    </View>
+    </View >
   );
 }
 
@@ -253,10 +276,25 @@ const styles = StyleSheet.create({
     width: 270,
     marginLeft: 17,
   },
+  searchBar: {
+    height: 40,
+    marginTop: 15,
+    marginBottom: 7,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+    borderColor: 'white',
+    backgroundColor: 'white',
+    width: 270,
+    marginLeft: 17,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   searcIcon: {
     width: 30,
     height: 30,
-    margin: 8,
   },
   items: {
     marginTop: 10,

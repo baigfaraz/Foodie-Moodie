@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, TouchableOpacity, Image, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import useRegisterApi from './CustomHooks/postApiCustomHook';
+import useRegisterApi from './CustomHooks/postSignUpApi';
 
 export default function SignUp({ navigation }) {
 
@@ -88,17 +88,18 @@ export default function SignUp({ navigation }) {
       </View>
 
       <TouchableOpacity style={styles.button}
-        onPress={() => useRegisterApi({navigation} , password, username, fullname, email, confirmpassword)}
+        onPress={() => useRegisterApi({ navigation }, password, username, fullname, email, confirmpassword)}
       >
         <Text>Create account</Text>
       </TouchableOpacity>
 
-      <Text style={styles.loginWith}>Or login with</Text>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.signUp}>Already on foodie moodie? Sign in</Text>
-      </TouchableOpacity>
+      <View style={styles.bottomView}>
+        <Text style={styles.loginWith}>Or login with</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.signUp}>Already on foodie moodie? Sign in</Text>
+        </TouchableOpacity>
+      </View>
     </View>
 
   );
@@ -167,15 +168,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     color: '#808080',
-    textAlign: 'center',
-    margin: 25,
+    
   },
   signUp: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#808080',
-    textAlign: 'center',
-    marginTop: 70,
+    
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -201,6 +200,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomRightRadius: 8,
     borderTopRightRadius: 8,
-  }
+  },
+  bottomView:{
+    alignItems:'center',
+    marginLeft:17,
+    marginBottom:17,
+    marginRight:17,
+    height:155,
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'space-between',
+}
 
 });
