@@ -1,85 +1,101 @@
-import { useState, TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
+import app from './firebase';
+import { useState, useEffect } from 'react';
+import { getDatabase, ref, onValue, update } from 'firebase/database';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const category = [
-    {
-        key: 0,
-        title: 'Burger',
-        source: require('./assets/burger.jpg'),
-    },
-    {
-        key: 1,
-        title: 'Kabab',
-        source: require('./assets/kabab.jpg'),
-    },
-    {
-        key: 2,
-        title: 'Coka Colla',
-        source: require('./assets/can.jpg'),
-    },
-    {
-        key: 3,
-        title: 'Chicken',
-        source: require('./assets/chicken.jpg'),
-    },
-    {
-        key: 4,
-        title: 'Pizza',
-        source: require('./assets/pizza1.jpg'),
-    },
-    {
-        key: 5,
-        title: 'Shuwarma',
-        source: require('./assets/shuwarma.jpg'),
-    },
-    {
-        key: 6,
-        title: 'Roast Leg',
-        source: require('./assets/leg.jpg'),
-    },
-    {
-        key: 7,
-        title: 'Fries',
-        source: require('./assets/fries.jpg'),
-    },
-]
+// const category = [
+//     {
+//         key: 0,
+//         title: 'Burger',
+//         source: require('./assets/burger.jpg'),
+//     },
+//     {
+//         key: 1,
+//         title: 'Kabab',
+//         source: require('./assets/kabab.jpg'),
+//     },
+//     {
+//         key: 2,
+//         title: 'Coka Colla',
+//         source: require('./assets/can.jpg'),
+//     },
+//     {
+//         key: 3,
+//         title: 'Chicken',
+//         source: require('./assets/chicken.jpg'),
+//     },
+//     {
+//         key: 4,
+//         title: 'Pizza',
+//         source: require('./assets/pizza1.jpg'),
+//     },
+//     {
+//         key: 5,
+//         title: 'Shuwarma',
+//         source: require('./assets/shuwarma.jpg'),
+//     },
+//     {
+//         key: 6,
+//         title: 'Roast Leg',
+//         source: require('./assets/leg.jpg'),
+//     },
+//     {
+//         key: 7,
+//         title: 'Fries',
+//         source: require('./assets/fries.jpg'),
+//     },
+// ]
 
 export default function FoodCategory({ navigation }) {
+    const [category, setCategory] = useState();
+
+    useEffect(() => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, 'allOptions');
+        onValue(dbRef, (snapshot) => {
+            let data = snapshot.val();
+            setCategory(data.foodCategory);
+        })
+    }, [])
     return (
 
-        <ScrollView>
-            <View style={StyleSheet.container}>
+        <View style={StyleSheet.container}>
 
-                <View style={styles.upperView}>
-                    <TouchableOpacity
-                        onPress={() => { navigation.navigate('Home') }}
-                    >
-                        <Image source={require('./assets/back.png')} />
-                    </TouchableOpacity>
-                    <Text style={{ fontSize: 18, fontWeight: '500', marginLeft: 95 }}>Category</Text>
-                </View>
-
-                <View>
-                    <FlatList
-                        data={category}
-                        keyExtractor={item => item.key}
-                        horizontal={false}
-                        numColumns={2}
-                        renderItem={({ item }) =>
-
-                            <View style={styles.items}>
-                                <TouchableOpacity>
-                                    <View style={styles.contain2}>
-                                        <Image source={item.source} style={styles.foodCategoryImage} />
-                                        <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        }
-                    />
-                </View>
-
+            <View style={styles.upperView}>
+                <TouchableOpacity
+                    onPress={() => { navigation.navigate('Home') }}
+                >
+                    <Image source={require('./assets/back.png')} />
+                </TouchableOpacity>
+                <Text style={{ fontSize: 18, fontWeight: '500' }}>Category</Text>
+                <TouchableOpacity>
+                    <Icon name="search-sharp" size={25} style={styles.searcIcon} />
+                </TouchableOpacity>
             </View>
-        </ScrollView>
+
+            <View style={{ marginLeft: 10, marginRight: 10 }}>
+                <FlatList
+                    data={category}
+                    keyExtractor={item => item.key}
+                    horizontal={false}
+                    numColumns={2}
+                    renderItem={({ item }) =>
+
+                        <View style={styles.items}>
+                            <TouchableOpacity>
+                                <View style={styles.contain1}>
+                                    <Image source={{ uri: item.img }} style={styles.foodCategoryImage} />
+                                    <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                />
+            </View>
+
+
+        </View>
     );
 }
 
@@ -90,32 +106,36 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f8ff',
     },
     upperView: {
-        marginTop: 40,
+        marginTop: 10,
         marginLeft: 17,
+        marginRight: 17,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 17,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: 100,
+    },
+    searcIcon: {
+        width: 30,
+        height: 30,
     },
     items: {
-        marginTop: 10,
-        marginLeft: 20,
-        marginBottom: 10,
-        padding: 2,
+        marginTop: 5,
+        padding: 10,
     },
-    contain2: {
-        height: 170,
+    contain1: {
+        height: 50,
         width: 150,
-        padding: 2,
         borderRadius: 8,
         backgroundColor: 'white',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
         alignItems: 'center',
-        justifyContent: 'center',
     },
     foodCategoryImage: {
-        width: 130,
-        height: 100,
-    },
+        width: 50,
+        height: 40,
+    }
 });

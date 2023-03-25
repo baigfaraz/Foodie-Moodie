@@ -16,6 +16,7 @@ import SearchResult from './SearchResult';
 import CartScreen from './cart';
 
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -30,7 +31,7 @@ export default function App() {
         {/* <Stack.Screen name='AuthCode' component={AuthCode} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='CreatePassword' component={CreatePassword} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='FoodCategory' component={FoodCategory} options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen name='Detail' component={Detail} options={{ headerShown: false }} /> */}
+        <Stack.Screen name='Detail' component={Detail} options={{ headerShown: false }} />
         {/* <Stack.Screen name='CounterApp' component={CounterApp} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='Search' component={Search} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='SearchResult' component={SearchResult} options={{ headerShown: false }} /> */}

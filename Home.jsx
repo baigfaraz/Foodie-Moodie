@@ -1,86 +1,49 @@
 import { useEffect, useState } from 'react';
 import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
 import app from './firebase';
-import { getDatabase, ref, onValue , update } from 'firebase/database';
+import { getDatabase, ref, onValue, update } from 'firebase/database';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 export default function Home({ navigation }) {
-
-  // const [category, setCategory] = useState();
-  // const [popularFoods, setPopularFoods] = useState();
-  // const [bestSeller, setBestSeller] = useState();
-  // useEffect(() => {
-  //   const db = getDatabase(app);
-  //   const dbRef1 = ref(db, 'foodCategory');
-  //   const dbRef2 = ref(db, 'popularFoods');
-  //   const dbRef3 = ref(db, 'bestSeller');
-  //   onValue(dbRef1, (snapshot) => {
-  //     let data = snapshot.val();
-  //     setCategory(data);
-  //   })
-  //   onValue(dbRef2, (snapshot) => {
-  //     let data = snapshot.val();
-  //     setPopularFoods(data);
-  //   })
-  //   onValue(dbRef3, (snapshot) => {
-  //     let data = snapshot.val();
-  //     setBestSeller(data);
-  //   })
-  // }, [])
 
   const [category, setCategory] = useState();
   const [popularFoods, setPopularFoods] = useState();
   const [bestSeller, setBestSeller] = useState();
-  const [like , setLike] = useState(false);
 
   useEffect(() => {
     const db = getDatabase(app);
-    const dbRef1 = ref(db, 'foodCategory');
-    const dbRef2 = ref(db, 'popularFoods');
-    const dbRef3 = ref(db, 'bestSeller');
-    onValue(dbRef1, (snapshot) => {
+    const dbRef = ref(db, 'allOptions');
+    onValue(dbRef, (snapshot) => {
       let data = snapshot.val();
-      setCategory(data);
+      setCategory(data.foodCategory);
+      setPopularFoods(data.popularFoods);
+      setBestSeller(data.bestSellers);
     })
-    onValue(dbRef2, (snapshot) => {
-      let data = snapshot.val();
-      setPopularFoods(data);
-    })
-    onValue(dbRef3, (snapshot) => {
-      let data = snapshot.val();
-      console.log(data);
-      setBestSeller(data);
-    })
-    // var index = 2
-    // var dbRefRef = 'alldeals/1/secondtarray/'+index
-    // const dbRefforUpdate = ref(db, dbRefRef)
-    // var index = 1
-    // var dbRefRef = 'popularFoods/'+index
-    // const dbRefforUpdate = ref(dbRefRef)
-    // update(dbRefforUpdate,{
-      
-    //   "like": setLike(!like)
-    
-    // })
-    // handleLike();
   }, [])
 
-  const handleLike = () =>{
-    var index = 0
-    var dbRefRef = 'popularFoods/'+index
-    const dbRefforUpdate = ref(dbRefRef)
-    update(dbRefforUpdate,{
-      
-      "like": setLike(!like)
-    
-    })
-    const dbRef2 = ref(db, 'popularFoods');
-    onValue(dbRef2, (snapshot) => {
-      let data = snapshot.val();
-      setPopularFoods(data);
-    })
+  const handleHeartColor = (item, place) => {
+    const db = getDatabase(app)
+    const dbRef = ref(db, `allOptions/` + place + `/${item.key}`)
 
+    let color = "grey"
+    if (item.heartColor == "grey")
+      color = "red"
+    update(dbRef, {
+      heartColor: color,
+    })
   }
+  const handleStarColor = (item, place) => {
+    const db = getDatabase(app)
+    const dbRef = ref(db, `allOptions/` + place + `/${item.key}`)
 
+    let color = "grey"
+    if (item.starColor == "grey")
+      color = "yellow"
+    update(dbRef, {
+      starColor: color,
+    })
+  }
 
   return (
 
@@ -93,8 +56,8 @@ export default function Home({ navigation }) {
         <TouchableOpacity style={styles.searchBar}
           onPress={() => { navigation.navigate('Search') }}
         >
-          <Text style={{ fontSize: 15, fontWeight: '300' }}>Search Your Favourite Food</Text>
-          <Image source={require('./assets/search.png')} style={styles.searcIcon} />
+          <Text style={{ fontSize: 15, fontWeight: '400' }}>Search Your Favourite Food</Text>
+          <Icon name="search-sharp" size={25} style={styles.searcIcon} />
         </TouchableOpacity>
 
       </View>
@@ -109,7 +72,7 @@ export default function Home({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View>
+        <View style={{ height: 80 }}>
           <FlatList
             data={category}
             keyExtractor={item => item.key}
@@ -135,7 +98,7 @@ export default function Home({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View>
+        <View style={{ height: 240 }}>
           <FlatList
             data={popularFoods}
             keyExtractor={item => item.key}
@@ -145,11 +108,14 @@ export default function Home({ navigation }) {
               <View style={styles.items}>
                 <TouchableOpacity>
                   <View style={styles.contain2}>
-                    <TouchableOpacity
-                     onPress={() => {handleLike()}} 
-                    >
-                      <Image source={{ uri: item.img2 }} style={{ height: 20, width: 20 }} />
-                    </TouchableOpacity>
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: 140 }}>
+                      <TouchableOpacity onPress={() => { handleStarColor(item, `popularFoods`) }}>
+                        <Icon name={item.starIcon} size={20} color={item.starColor} />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => { handleHeartColor(item, `popularFoods`) }}>
+                        <Icon name={item.heartIcon} size={20} color={item.heartColor} />
+                      </TouchableOpacity>
+                    </View>
                     <Image source={{ uri: item.img }} style={styles.popularfoodImage} />
                     <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
                     <Text style={{ fontSize: 16, fontWeight: '500', margin: 5, marginLeft: 11 }}>{item.price}</Text>
@@ -164,7 +130,7 @@ export default function Home({ navigation }) {
           <Text style={styles.category}>Best Seller</Text>
         </View>
 
-        <View>
+        <View style={{ height: 135 }}>
           <FlatList
             data={bestSeller}
             keyExtractor={item => item.key}
@@ -173,14 +139,19 @@ export default function Home({ navigation }) {
 
               <View style={styles.items}>
                 <TouchableOpacity>
-                  <View style={{ display: 'flex', flexDirection: 'row', }}>
-                    <View style={styles.contain3}>
-                      <Image source={{ uri: item.img }} style={styles.bestsellerImage} />
-                      {/* <Image source={{uri: item.heart}}/> */}
-                      <View style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 16, }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
-                        <Text style={{ fontSize: 16, fontWeight: '500', margin: 5, marginLeft: 11 }}>{item.price}</Text>
-                      </View>
+                  <View style={styles.contain3}>
+                    <Image source={{ uri: item.img }} style={styles.bestsellerImage} />
+                    <View style={{ display: 'flex', flexDirection: 'column', alignItems: "center" }}>
+                      <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginLeft: 11 }}>{item.title}</Text>
+                      <Text style={{ fontSize: 16, fontWeight: '500', margin: 5, marginLeft: 11 }}>{item.price}</Text>
+                    </View>
+                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', height: 100 }}>
+                      <TouchableOpacity onPress={() => { handleStarColor(item, `bestSellers`) }}>
+                        <Icon name={item.starIcon} size={20} color={item.starColor} />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => { handleHeartColor(item, `bestSellers`) }}>
+                        <Icon name={item.heartIcon} size={20} color={item.heartColor} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -193,23 +164,24 @@ export default function Home({ navigation }) {
       <View style={styles.navigationbar}>
         <TouchableOpacity
           onPress={() => { navigation.navigate('Home') }}
+
         >
-          <Image source={require('./assets/home.png')} style={{ height: 28, width: 28 }} />
+          <Icon name='home' size={30} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => { navigation.navigate('favourite') }}
         >
-          <Image source={require('./assets/fav.png')} style={{ height: 28, width: 28 }} />
+          <Icon name='heart-sharp' size={30} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => { navigation.navigate('CartScreen') }}
         >
-          <Image source={require('./assets/cart.png')} style={{ height: 30, width: 30 }} />
+          <Icon name='cart' size={30} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => { navigation.navigate('Profile') }}
         >
-          <Image source={require('./assets/profile.png')} style={{ height: 28, width: 28 }} />
+          <Icon name='cog' size={30} />
         </TouchableOpacity>
       </View>
     </View >
@@ -342,6 +314,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: "space-around"
   },
   navigationbar: {
     backgroundColor: 'white',
