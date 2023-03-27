@@ -1,41 +1,36 @@
-import { useState, TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Button, Image, FlatList, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useState, useEffect } from 'react';
+import app from './firebase';
+import { getDatabase, ref, onValue, update } from 'firebase/database';
 
-const topping = [
-    {
-        key: 0,
-        source: require('./assets/burger.jpg'),
-    },
-    {
-        key: 1,
-        source: require('./assets/kabab.jpg'),
-    },
-    {
-        key: 2,
-        source: require('./assets/can.jpg'),
-    },
-    {
-        key: 3,
-        source: require('./assets/chicken.jpg'),
-    },
-    {
-        key: 4,
-        source: require('./assets/pizza1.jpg'),
-    },
-    {
-        key: 5,
-        source: require('./assets/shuwarma.jpg'),
-    },
-    {
-        key: 6,
-        source: require('./assets/leg.jpg'),
-    },
-    {
-        key: 7,
-        source: require('./assets/fries.jpg'),
-    },
-]
+export default function Detail({ navigation }) {
 
-export default function Detail() {
+    const [category, setCategory] = useState();
+    const [picture, setPicture] = useState();
+    const [foodNme, setFoodName] = useState();
+    const [price, setPrice] = useState();
+    const [detail, setDetail] = useState();
+
+
+
+    useEffect(() => {
+
+        const db = getDatabase(app);
+        const dbRef = ref(db, 'allOptions');
+        onValue(dbRef, (snapshot) => {
+            let data = snapshot.val();
+            setCategory(data.foodCategory);
+        })
+        navigation.addListener('focus', () => {
+            setPicture(global.Itemdetail.img)
+            setFoodName(global.Itemdetail.title)
+            setPrice(global.Itemdetail.price)
+            setDetail(global.Itemdetail.detail)
+        })
+
+    }, [navigation])
+
     return (
         <View style={StyleSheet.container}>
 
@@ -43,24 +38,25 @@ export default function Detail() {
                 <TouchableOpacity
                     onPress={() => { navigation.navigate('Home') }}
                 >
-                    <Image source={require('./assets/back.png')} />
+                    <Icon name="chevron-back-outline" size={25} style={styles.backArrow} />
                 </TouchableOpacity>
-                <Text style={{ fontSize: 18, fontWeight: '500', marginLeft: 120 }}>Detail</Text>
+                <Text style={{ fontSize: 18, fontWeight: '500' }}>Detail</Text>
+                <TouchableOpacity>
+                    <Icon name="search-sharp" size={25} style={styles.searcIcon} />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.centerView}>
-                <Image source={require('./assets/burger.jpg')} style={styles.imageView} />
+                <Image source={{ uri: picture }} style={styles.imageView} />
                 <View style={styles.namePrice}>
-                    <Text style={{ fontWeight: '500', fontSize: 22 }}>Hulk Burger</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'red' }}>$15.00</Text>
+                    <Text style={{ fontWeight: '500', fontSize: 22 }}>{foodNme}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'red' }}>{price}</Text>
                 </View>
                 <View style={{ marginBottom: 10 }}>
-                    <Text style={{ fontWeight: '500', fontSize: 16, marginBottom: 5, marginTop: 12 }}>Detail</Text>
-                    <Text style={{ fontWeight: '400' }}>This burger user 100% quiality beef with sliced tomatoas , pickles , vegetables , unions and extra thick chees...
-                        <TouchableOpacity >
-                            <Text style={{ color: 'red' }}>Read more</Text>
-                        </TouchableOpacity>
-                    </Text>
+                    <Text style={{ fontWeight: '600', fontSize: 16, marginBottom: 5, marginTop: 12 }}>Detail</Text>
+                    <ScrollView>
+                        <Text style={{ fontWeight: '400' }}>{detail}</Text>
+                    </ScrollView>
                 </View>
             </View>
 
@@ -70,7 +66,7 @@ export default function Detail() {
                 </View>
                 <View>
                     <FlatList
-                        data={topping}
+                        data={category}
                         keyExtractor={item => item.key}
                         horizontal={true}
                         renderItem={({ item }) =>
@@ -78,16 +74,22 @@ export default function Detail() {
                             <View style={styles.items}>
                                 <TouchableOpacity>
                                     <View style={styles.contain2}>
-                                        <Image source={item.source} style={styles.toppingImage} />
+                                        <Image source={{ uri: item.img }} style={styles.toppingImage} />
                                     </View>
                                 </TouchableOpacity>
                             </View>
                         }
                     />
                 </View>
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 20, marginBottom: 20 }}>
-                    <Image source={require('./assets/greentick.png')} style={{ height: 15, width: 15 }} />
-                    <Text style={{ fontWeight: '400', fontSize: 15 }}> Free Shiping</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <TouchableOpacity style={styles.cartButton}>
+                        <Icon name="cart" size={30} style={styles.backArrow} />
+                        <Text style={{ color: 'white', fontWeight: '500' }}>Add to Cart</Text>
+                    </TouchableOpacity>
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 20, marginBottom: 20 }}>
+                        <Image source={require('./assets/greentick.png')} style={{ height: 15, width: 15 }} />
+                        <Text style={{ fontWeight: '400', fontSize: 15 }}> Free Shiping</Text>
+                    </View>
                 </View>
                 <TouchableOpacity style={styles.button}>
                     <Text style={{ color: 'white', fontWeight: 'bold' }}>Order Now</Text>
@@ -106,12 +108,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f8ff',
     },
     upperView: {
-        marginTop: 40,
+        marginTop: 10,
         marginLeft: 17,
+        marginRight: 17,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 17,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: 100,
     },
     centerView: {
         marginLeft: 17,
@@ -163,4 +168,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
     },
+    backArrow: {
+        width: 30,
+        height: 30,
+        // color: 'silver',\
+    },
+    cartButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 40,
+        backgroundColor: 'tomato',
+        padding: 6,
+        borderRadius: 8,
+        width: 120,
+
+    }
 });

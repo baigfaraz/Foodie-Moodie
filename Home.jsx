@@ -19,6 +19,7 @@ export default function Home({ navigation }) {
       setCategory(data.foodCategory);
       setPopularFoods(data.popularFoods);
       setBestSeller(data.bestSellers);
+
     })
   }, [])
 
@@ -45,10 +46,18 @@ export default function Home({ navigation }) {
     })
   }
 
+  let getDetail = (item) => {
+    const db = getDatabase(app)
+    // const Image = ref(db, `allOptions/` + place + `/${item.key}`)
+    global.Itemdetail = item
+    navigation.navigate('Detail')
+  }
+
   return (
 
     <View style={styles.container}>
 
+      <Icon name="apps" size={22} style={styles.headerLogo} />
       <Text style={styles.text1}>Hello Muhammad Faraz Baig!</Text>
       <Text style={styles.text2}>Choose your favorite food</Text>
 
@@ -106,7 +115,9 @@ export default function Home({ navigation }) {
             renderItem={({ item }) =>
 
               <View style={styles.items}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => { getDetail(item) }}
+                >
                   <View style={styles.contain2}>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: 140 }}>
                       <TouchableOpacity onPress={() => { handleStarColor(item, `popularFoods`) }}>
@@ -138,7 +149,7 @@ export default function Home({ navigation }) {
             renderItem={({ item }) =>
 
               <View style={styles.items}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => { getDetail(item) }}>
                   <View style={styles.contain3}>
                     <Image source={{ uri: item.img }} style={styles.bestsellerImage} />
                     <View style={{ display: 'flex', flexDirection: 'column', alignItems: "center" }}>
@@ -164,7 +175,6 @@ export default function Home({ navigation }) {
       <View style={styles.navigationbar}>
         <TouchableOpacity
           onPress={() => { navigation.navigate('Home') }}
-
         >
           <Icon name='home' size={30} />
         </TouchableOpacity>
@@ -194,16 +204,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f8ff',
   },
+  headerLogo: {
+    height: 40,
+    marginLeft: 17,
+    alignItems: 'center',
+    marginTop: 40,
+    color: 'red',
+  },
   text1: {
     fontWeight: 'bold',
     fontSize: 14,
-    marginTop: 44,
     marginLeft: 17,
   },
   text2: {
     fontWeight: 'bold',
     fontSize: 20,
-    marginTop: 19,
+    marginTop: 7,
     marginBottom: 10,
     marginLeft: 17,
   },
@@ -250,7 +266,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     height: 40,
-    marginTop: 15,
+    marginTop: 10,
     marginBottom: 7,
     borderWidth: 1,
     padding: 10,

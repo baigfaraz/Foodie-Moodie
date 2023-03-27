@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import useSighnInApi from './CustomHooks/postSighnInApi';
 
 
+
 export default function Login({ navigation }) {
     const [password, setPassword] = useState('');
     const [username, setUserName] = useState('');
@@ -52,8 +53,8 @@ export default function Login({ navigation }) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button}
-                    // onPress={() => useSighnInApi({ navigation }, password, username)}
-                    onPress={()=>{navigation.navigate('Home')}}
+                    onPress={() => useSighnInApi({ navigation }, password, username)}
+                // onPress={()=>{navigation.navigate('Home')}}
                 >
                     <Text style={{ color: 'white' }}>Login</Text>
                 </TouchableOpacity>
@@ -159,14 +160,14 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         backgroundColor: 'white',
     },
-    bottomView:{
-        alignItems:'center',
-        marginLeft:17,
-        marginBottom:17,
-        marginRight:17,
-        height:370,
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'space-between',
+    bottomView: {
+        alignItems: 'center',
+        marginLeft: 17,
+        marginBottom: 17,
+        marginRight: 17,
+        height: 370,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     }
 });

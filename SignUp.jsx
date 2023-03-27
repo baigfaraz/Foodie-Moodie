@@ -1,6 +1,28 @@
+// import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, TouchableOpacity, Image, Alert } from 'react-native';
+// import React, { useEffect, useState } from 'react';
+// import useRegisterApi from './CustomHooks/postSignUpApi';
+
+
+// export default function SignUp({ navigation }) {
+
+//   const [showPassword, setShowPassword] = useState(false);
+//   const toggleShowPassword = () => { setShowPassword(!showPassword); }
+
+//   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+//   const toggleShowConfirmPassword = () => { setShowConfirmPassword(!showConfirmPassword); }
+
+
+//   const [email, setEmail] = useState('');
+//   const [username, setUserName] = useState('');
+//   const [fullname, setName] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [confirmpassword, setConfirmPassword] = useState('');
+
 import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, TouchableOpacity, Image, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import useRegisterApi from './CustomHooks/postSignUpApi';
+
+
 
 export default function SignUp({ navigation }) {
 
@@ -10,12 +32,27 @@ export default function SignUp({ navigation }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const toggleShowConfirmPassword = () => { setShowConfirmPassword(!showConfirmPassword); }
 
-
   const [email, setEmail] = useState('');
   const [username, setUserName] = useState('');
   const [fullname, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
+
+  // const handleSignUp = () => {
+  //   if (password !== confirmpassword) {
+  //     Alert.alert('Passwords do not match');
+  //     return;
+  //   }
+
+  //   firebase.auth().createUserWithEmailAndPassword(email, password)
+  //     .then(() => {
+  //       console.log('User account created successfully!');
+  //       navigation.navigate('Home');
+  //     })
+  //     .catch(error => {
+  //       Alert.alert('Error creating user account', error.message);
+  //     });
+  // };
 
   return (
     <View>
@@ -29,14 +66,14 @@ export default function SignUp({ navigation }) {
         value={email}
 
       />
-      <Text style={styles.text}> UserName </Text>
+       <Text style={styles.text}> UserName </Text>
       <TextInput
         style={styles.input}
         keyboardType={'name-phone-pad'}
         placeholder='UserName'
         onChangeText={setUserName}
         value={username}
-      />
+      /> 
       <Text style={styles.text}>Full Name </Text>
       <TextInput
         style={styles.input}
@@ -44,7 +81,7 @@ export default function SignUp({ navigation }) {
         placeholder='Full Name'
         onChangeText={setName}
         value={fullname}
-      />
+      />                                 
 
       <Text style={styles.text}> Password </Text>
 
@@ -89,6 +126,7 @@ export default function SignUp({ navigation }) {
 
       <TouchableOpacity style={styles.button}
         onPress={() => useRegisterApi({ navigation }, password, username, fullname, email, confirmpassword)}
+        // onPress={() => {handleSignUp()}}
       >
         <Text>Create account</Text>
       </TouchableOpacity>
