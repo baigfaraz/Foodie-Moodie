@@ -30,7 +30,7 @@ export default function Home({ navigation }) {
     let color = "grey"
     if (item.heartColor == "grey")
       color = "red"
-    update(dbRef, {
+    update(dbRef, {  
       heartColor: color,
     })
   }

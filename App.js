@@ -14,6 +14,8 @@ import CounterApp from './counter';
 import Search from './search';
 import SearchResult from './SearchResult';
 import CartScreen from './cart';
+import Profile from './profile';
+import EditProfile from './editProfile';
 
 
 
@@ -25,17 +27,19 @@ export default function App() {
       <Stack.Navigator>
         {/* <Stack.Screen name='FrontPage' component={FrontPage} options={{ headerShown: false }} /> */}
         <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
-        {/* <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} /> */}
+        <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
         <Stack.Screen name='SignUp' component={SignUp} options={{ headerShown: false }} />
         {/* <Stack.Screen name='EmailVerify' component={EmailVerify} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='AuthCode' component={AuthCode} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='CreatePassword' component={CreatePassword} options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen name='FoodCategory' component={FoodCategory} options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen name='Detail' component={Detail} options={{ headerShown: false }} /> */}
+        <Stack.Screen name='FoodCategory' component={FoodCategory} options={{ headerShown: false }} />
+        <Stack.Screen name='Detail' component={Detail} options={{ headerShown: false }} />
         {/* <Stack.Screen name='CounterApp' component={CounterApp} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='Search' component={Search} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='SearchResult' component={SearchResult} options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name='CartScreen' component={CartScreen} options={{ headerShown: false }} /> */}
+        {/* <Stack.Screen name='Profile' component={Profile} options={{ headerShown: false }} /> */}
+        {/* <Stack.Screen name='EditProfile' component={EditProfile} options={{ headerShown: false }} /> */}
       </Stack.Navigator>
     </NavigationContainer>
 

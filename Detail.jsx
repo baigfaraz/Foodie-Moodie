@@ -83,7 +83,7 @@ export default function Detail({ navigation }) {
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <TouchableOpacity style={styles.cartButton}>
-                        <Icon name="cart" size={30} style={styles.backArrow} />
+                        <Icon name="cart" size={25} style={styles.backArrow} />
                         <Text style={{ color: 'white', fontWeight: '500' }}>Add to Cart</Text>
                     </TouchableOpacity>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 20, marginBottom: 20 }}>
@@ -92,7 +92,7 @@ export default function Detail({ navigation }) {
                     </View>
                 </View>
                 <TouchableOpacity style={styles.button}>
-                    <Text style={{ color: 'white', fontWeight: 'bold' }}>Order Now</Text>
+                    <Text style={{ color: 'white', fontWeight: 'bold' }}>Buy Now</Text>
                 </TouchableOpacity>
 
             </View>
@@ -166,21 +166,21 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: 'tomato',
         alignItems: 'center',
-        padding: 10,
     },
     backArrow: {
         width: 30,
         height: 30,
-        // color: 'silver',\
+        // color: 'silver',
     },
     cartButton: {
         flexDirection: 'row',
         alignItems: 'center',
         height: 40,
         backgroundColor: 'tomato',
-        padding: 6,
+        padding: 10,
         borderRadius: 8,
         width: 120,
+        margin:18,
 
     }
 });

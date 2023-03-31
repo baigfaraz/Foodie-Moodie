@@ -1,8 +1,8 @@
-import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Image } from 'react-native';
+import { TouchableOpacity, SafeAreaView, StyleSheet, Text, TextInput, View, Image, Alert } from 'react-native';
 import React, { useState } from 'react';
 import useSighnInApi from './CustomHooks/postSighnInApi';
-
-
+import {auth} from "./firebase";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 
 export default function Login({ navigation }) {
     const [password, setPassword] = useState('');
@@ -10,6 +10,27 @@ export default function Login({ navigation }) {
 
     const [showPassword, setShowPassword] = useState(false);
     const toggleShowPassword = () => { setShowPassword(!showPassword); }
+
+    const handleLogin = async () => {
+        console.log('Handle Sign In')
+        await signInWithEmailAndPassword(auth, username, password)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log("user data,", user);
+            console.log("user data,", user);
+            // ...
+            navigation.navigate('Home');
+            Alert.alert('SignIn Successfully');
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("Error,", errorMessage);
+            // ..
+            Alert.alert('Invalid UserName or passwoord');
+          });
+      };
 
     return (
         <View style={styles.container}>
@@ -53,8 +74,8 @@ export default function Login({ navigation }) {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.button}
-                    onPress={() => useSighnInApi({ navigation }, password, username)}
-                // onPress={()=>{navigation.navigate('Home')}}
+                    // onPress={() => useSighnInApi({ navigation }, password, username)}
+                onPress={()=>{handleLogin()}}
                 >
                     <Text style={{ color: 'white' }}>Login</Text>
                 </TouchableOpacity>

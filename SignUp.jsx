@@ -1,27 +1,10 @@
-// import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, TouchableOpacity, Image, Alert } from 'react-native';
-// import React, { useEffect, useState } from 'react';
-// import useRegisterApi from './CustomHooks/postSignUpApi';
-
-
-// export default function SignUp({ navigation }) {
-
-//   const [showPassword, setShowPassword] = useState(false);
-//   const toggleShowPassword = () => { setShowPassword(!showPassword); }
-
-//   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-//   const toggleShowConfirmPassword = () => { setShowConfirmPassword(!showConfirmPassword); }
-
-
-//   const [email, setEmail] = useState('');
-//   const [username, setUserName] = useState('');
-//   const [fullname, setName] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [confirmpassword, setConfirmPassword] = useState('');
-
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, TouchableOpacity, Image, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, View, TouchableOpacity,Image, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import useRegisterApi from './CustomHooks/postSignUpApi';
-
+import { auth } from "./firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged } from "firebase/auth";
+import {getFirestore , setDoc , doc} from 'firebase/firestore'
+import {CheckBox} from 'react-native-elements';
 
 
 export default function SignUp({ navigation }) {
@@ -37,22 +20,42 @@ export default function SignUp({ navigation }) {
   const [fullname, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
+  const [checked, setChecked] = useState(false);
 
-  // const handleSignUp = () => {
-  //   if (password !== confirmpassword) {
-  //     Alert.alert('Passwords do not match');
-  //     return;
-  //   }
+  const handleSignup = async () => {
+    console.log('LOGGED')
+    await createUserWithEmailAndPassword(auth, username, password)
+      .then((userCredential) => {
+        console.log("Succesfull");
+        const user = userCredential.user;
+        console.log("user data,", user);
+        const userData ={
+          fullname : fullname,
+        }
+        saveUserData(userCredential.user.uid , userData);
+        navigation.navigate('Login')
+       
+        Alert.alert('Registered Successfully');
+      })
 
-  //   firebase.auth().createUserWithEmailAndPassword(email, password)
-  //     .then(() => {
-  //       console.log('User account created successfully!');
-  //       navigation.navigate('Home');
-  //     })
-  //     .catch(error => {
-  //       Alert.alert('Error creating user account', error.message);
-  //     });
-  // };
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log('Error Code == ', errorCode)
+        console.log('Error Message == ', errorMessage)
+        Alert.alert('User Exist already');
+      });
+  };
+
+  const saveUserData = async (uid, userData) => {
+    const db = getFirestore();
+    try {
+      await setDoc(doc(db, 'users', uid), userData);
+      console.log('Document written with ID: ', userData.uid);
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
+  };
 
   return (
     <View>
@@ -60,20 +63,20 @@ export default function SignUp({ navigation }) {
       <Text style={styles.text}> Email </Text>
       <TextInput
         style={styles.input}
-        keyboardType='email-address'
-        placeholder='E-mail'
+        keyboardType='name-phone-pad'
+        placeholder='Phone Number'
         onChangeText={setEmail}
         value={email}
 
       />
-       <Text style={styles.text}> UserName </Text>
+      <Text style={styles.text}> UserName </Text>
       <TextInput
         style={styles.input}
         keyboardType={'name-phone-pad'}
         placeholder='UserName'
         onChangeText={setUserName}
         value={username}
-      /> 
+      />
       <Text style={styles.text}>Full Name </Text>
       <TextInput
         style={styles.input}
@@ -81,7 +84,7 @@ export default function SignUp({ navigation }) {
         placeholder='Full Name'
         onChangeText={setName}
         value={fullname}
-      />                                 
+      />
 
       <Text style={styles.text}> Password </Text>
 
@@ -123,10 +126,13 @@ export default function SignUp({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+      <CheckBox
+        onPress={()=>{setChecked(true)}}
+      />
 
       <TouchableOpacity style={styles.button}
-        onPress={() => useRegisterApi({ navigation }, password, username, fullname, email, confirmpassword)}
-        // onPress={() => {handleSignUp()}}
+      // onPress={() => useRegisterApi({ navigation }, password, username, fullname, email, confirmpassword)}
+      onPress={()=>{handleSignup()}}
       >
         <Text>Create account</Text>
       </TouchableOpacity>
@@ -206,13 +212,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     color: '#808080',
-    
+
   },
   signUp: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#808080',
-    
+
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -239,15 +245,15 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     borderTopRightRadius: 8,
   },
-  bottomView:{
-    alignItems:'center',
-    marginLeft:17,
-    marginBottom:17,
-    marginRight:17,
-    height:155,
-    display:'flex',
-    flexDirection:'column',
-    justifyContent:'space-between',
-}
+  bottomView: {
+    alignItems: 'center',
+    marginLeft: 17,
+    marginBottom: 17,
+    marginRight: 17,
+    height: 155,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  }
 
 });

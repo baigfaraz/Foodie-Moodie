@@ -4,48 +4,6 @@ import { useState, useEffect } from 'react';
 import { getDatabase, ref, onValue, update } from 'firebase/database';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-// const category = [
-//     {
-//         key: 0,
-//         title: 'Burger',
-//         source: require('./assets/burger.jpg'),
-//     },
-//     {
-//         key: 1,
-//         title: 'Kabab',
-//         source: require('./assets/kabab.jpg'),
-//     },
-//     {
-//         key: 2,
-//         title: 'Coka Colla',
-//         source: require('./assets/can.jpg'),
-//     },
-//     {
-//         key: 3,
-//         title: 'Chicken',
-//         source: require('./assets/chicken.jpg'),
-//     },
-//     {
-//         key: 4,
-//         title: 'Pizza',
-//         source: require('./assets/pizza1.jpg'),
-//     },
-//     {
-//         key: 5,
-//         title: 'Shuwarma',
-//         source: require('./assets/shuwarma.jpg'),
-//     },
-//     {
-//         key: 6,
-//         title: 'Roast Leg',
-//         source: require('./assets/leg.jpg'),
-//     },
-//     {
-//         key: 7,
-//         title: 'Fries',
-//         source: require('./assets/fries.jpg'),
-//     },
-// ]
 
 export default function FoodCategory({ navigation }) {
     const [category, setCategory] = useState();
